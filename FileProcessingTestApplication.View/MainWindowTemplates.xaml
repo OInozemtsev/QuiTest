@@ -1,0 +1,39 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:FileProcessingTestApplication.ViewModels.Converters;assembly=FileProcessingTestApplication.ViewModels"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <DataTemplate x:Key="UrlReportDataTemplate">
+        <Grid x:Name="Grid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="30"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="UrlNameTextBlock" Grid.Column="0" TextWrapping="NoWrap"
+                       Text="{Binding Url, TargetNullValue={x:Static sys:String.Empty}, FallbackValue={x:Static sys:String.Empty}}"/>
+            <Label Grid.Column="2" Grid.ColumnSpan="2" 
+                   Content="{Binding ErrorMessage, TargetNullValue={x:Static sys:String.Empty}, FallbackValue={x:Static sys:String.Empty}}"
+                   Visibility="{Binding ErrorMessage, Converter={converters:NullOrEmptyToVisibleConverter}}"/>
+            <ProgressBar Grid.Column="3" IsIndeterminate="True" HorizontalAlignment="Stretch"
+                         Visibility="{Binding RequestWrapper.IsNotCompleted, TargetNullValue=True, FallbackValue=True, Converter={converters:BoolToVisibleConverter}}"/>
+            <TextBlock x:Name="ReferenceCountTextBlock" Grid.Column="5" TextAlignment="Right"
+                       Text="{Binding ReferenceCount, TargetNullValue={x:Static sys:String.Empty}, FallbackValue={x:Static sys:String.Empty}}">
+            </TextBlock>
+        </Grid>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsMaxReference}" Value="True" >
+                <Setter TargetName="ReferenceCountTextBlock" Property="FontWeight" Value="Bold"/>
+                <Setter TargetName="UrlNameTextBlock" Property="FontWeight" Value="Bold"/>
+                <Setter TargetName="Grid" Property="Background" Value="Green"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ErrorMessage, Converter={converters:InvertNullOrEmptyToBoolConverter}}" Value="True" >
+                <Setter TargetName="Grid" Property="Background" Value="Red"/>
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+</ResourceDictionary>

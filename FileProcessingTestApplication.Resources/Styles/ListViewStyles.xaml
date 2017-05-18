@@ -1,0 +1,14 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--Стиль элемента главного списка-->
+    <Style x:Key="MainListViewItemStyle" TargetType="{x:Type ListViewItem}">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    </Style>
+
+    <!--Стиль отображения главного списка URL-->
+    <Style x:Key="MainListViewStyle" TargetType="{x:Type ListView}">
+        <Setter Property="ItemContainerStyle" Value="{StaticResource MainListViewItemStyle}"/>
+    </Style>
+
+</ResourceDictionary>

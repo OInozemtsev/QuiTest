@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using FileProcessingTestApplication.ViewModels.Abstract;
@@ -22,11 +21,6 @@ namespace FileProcessingTestApplication.ViewModels
         /// Сервис парсинга html
         /// </summary>
         private UrlParseService mUrlParseService;
-
-        /// <summary>
-        /// Рандомное значение
-        /// </summary>
-        private static Random mRandom;
 
         /// <summary>
         /// Коллекция url
@@ -96,16 +90,14 @@ namespace FileProcessingTestApplication.ViewModels
 
         #region Конструкторы
 
-        static UrlReportViewModel()
-        {
-            mRandom = new Random(DateTime.Now.Millisecond);
-        }
-
-        public UrlReportViewModel(MaxReferenceCountSelectDelegate maxReferenceCountSelectDelegate)
+        public UrlReportViewModel(
+            UrlRequestService urlRequestService,
+            UrlParseService urlParseService,
+            MaxReferenceCountSelectDelegate maxReferenceCountSelectDelegate)
         {
             mMaxReferenceCountSelectDelegateInvoker = maxReferenceCountSelectDelegate;
-            mUrlRequestService = new UrlRequestService();
-            mUrlParseService = new UrlParseService();
+            mUrlRequestService = urlRequestService;
+            mUrlParseService = urlParseService;
             this.RequestWrapper = new WrapAsyncResult<int?>((source, completionSource) =>
             {
                 mCancellationTokenSource = source;
@@ -126,8 +118,6 @@ namespace FileProcessingTestApplication.ViewModels
             await RequestWrapper.AwaitAsync(
                 cancelableAction: async token =>
                 {
-                    int delay = mRandom.Next(1, 10);
-                    await Task.Delay(TimeSpan.FromSeconds(delay), token);
                     string htmlMessage = await mUrlRequestService.RequestUrl(Url);
                     return await mUrlParseService.GetReferenceCount(htmlMessage);
                 },
@@ -146,10 +136,16 @@ namespace FileProcessingTestApplication.ViewModels
         /// <summary>
         /// Запрос на отмену операции обработки
         /// </summary>
-        public void CancelRequest()
+        public async Task CancelRequest()
         {
-            mCancellationTokenSource.Cancel();
-            mMaxReferenceCountSelectDelegateInvoker = null;
+            await Task.Run(() =>
+            {
+                this.mCancellationTokenSource.Cancel();
+                this.mMaxReferenceCountSelectDelegateInvoker = null;
+                this.mUrlRequestService = null;
+                this.mUrlParseService = null;
+                this.RequestWrapper = null;
+            });
         }
 
         #endregion//Открытые методжы

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows;
-using FileProcessingTestApplication.ViewModels.Converters.Abstract;
+using FileProcessingTestApplication.View.Converters.Abstract;
 
-namespace FileProcessingTestApplication.ViewModels.Converters
+namespace FileProcessingTestApplication.View.Converters
 {
     public  class NullOrEmptyToVisibleConverter : ConverterBase<NullOrEmptyToVisibleConverter>
     {

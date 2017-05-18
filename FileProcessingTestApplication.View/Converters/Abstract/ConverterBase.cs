@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace FileProcessingTestApplication.ViewModels.Converters.Abstract
+namespace FileProcessingTestApplication.View.Converters.Abstract
 {
     public abstract class ConverterBase<T> : MarkupExtension, IValueConverter
     where T : class, new()

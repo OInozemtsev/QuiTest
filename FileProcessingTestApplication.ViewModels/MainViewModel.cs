@@ -6,6 +6,7 @@ using System.Windows.Input;
 using FileProcessingTestApplication.ViewModels.Abstract;
 using FileProcessingTestApplication.ViewModels.Builders;
 using FileProcessingTestApplication.ViewModels.Commands;
+using FileProcessingTestApplication.ViewModels.Services;
 
 namespace FileProcessingTestApplication.ViewModels
 {
@@ -19,6 +20,16 @@ namespace FileProcessingTestApplication.ViewModels
         /// Строитель отчета по url
         /// </summary>
         private UrlReportBuilder mUrlReportBuilder;
+
+        /// <summary>
+        /// Обработка url
+        /// </summary>
+        private UrlRequestService mUrlRequestService;
+
+        /// <summary>
+        /// Сервис парсинга html
+        /// </summary>
+        private UrlParseService mUrlParseService;
 
         #endregion//Поля
 
@@ -45,6 +56,8 @@ namespace FileProcessingTestApplication.ViewModels
         {
             ReportCollection = new ObservableCollection<UrlReportViewModel>();
             mUrlReportBuilder = new UrlReportBuilder();
+            mUrlRequestService = new UrlRequestService();
+            mUrlParseService = new UrlParseService();
             UrlFilePath = Constants.cUrlFilePath;
         }
 
@@ -64,9 +77,9 @@ namespace FileProcessingTestApplication.ViewModels
         /// <returns></returns>
         private async Task StartProcessingCommandHandler(object parameter)
         {
-            ReportCollection.ToList().ForEach(x => x.CancelRequest());
+            ReportCollection.ToList().ForEach(async x => await x.CancelRequest());
             ReportCollection.Clear();
-            IEnumerable<UrlReportViewModel> urls = await mUrlReportBuilder.GetUrlReportsAsync(UrlFilePath, SelectMaxReferenceResult);
+            IEnumerable<UrlReportViewModel> urls = await mUrlReportBuilder.GetUrlReportsAsync(UrlFilePath, mUrlRequestService, mUrlParseService, SelectMaxReferenceResult);
             List<UrlReportViewModel> urlList = urls as List<UrlReportViewModel> ?? urls.ToList();
             urlList.ForEach(async x =>
             {
@@ -90,10 +103,12 @@ namespace FileProcessingTestApplication.ViewModels
             maxReferenceUrl = await Task.Run(() =>
             {
                 List<UrlReportViewModel> urlsWithValue = ReportCollection.ToList().Where(x => x.ReferenceCount.HasValue).ToList();
+                if (!urlsWithValue.Any()) return null;
                 return urlsWithValue.Aggregate(urlsWithValue.First(),
                     (curr, next) => next.ReferenceCount > curr.ReferenceCount ? next : curr);
             });
-            maxReferenceUrl.IsMaxReference = true;
+            if (maxReferenceUrl != null)
+                maxReferenceUrl.IsMaxReference = true;
         }
 
         #endregion//Команды

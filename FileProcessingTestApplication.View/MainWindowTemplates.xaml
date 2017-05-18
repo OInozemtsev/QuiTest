@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:converters="clr-namespace:FileProcessingTestApplication.ViewModels.Converters;assembly=FileProcessingTestApplication.ViewModels"
-                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    xmlns:converters="clr-namespace:FileProcessingTestApplication.View.Converters">
 
     <DataTemplate x:Key="UrlReportDataTemplate">
         <Grid x:Name="Grid">

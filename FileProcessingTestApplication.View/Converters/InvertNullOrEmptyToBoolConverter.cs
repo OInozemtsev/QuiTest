@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Globalization;
-using FileProcessingTestApplication.ViewModels.Converters.Abstract;
+using FileProcessingTestApplication.View.Converters.Abstract;
 
-namespace FileProcessingTestApplication.ViewModels.Converters
+namespace FileProcessingTestApplication.View.Converters
 {
     public  class InvertNullOrEmptyToBoolConverter : ConverterBase<InvertNullOrEmptyToBoolConverter>
     {

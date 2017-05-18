@@ -30,12 +30,19 @@ namespace FileProcessingTestApplication.ViewModels.Builders
         /// Получение списка url
         /// </summary>
         /// <param name="urlFilePath"></param>
+        /// <param name="urlRequestService"></param>
+        /// <param name="urlParseService"></param>
+        /// <param name="maxReferenceSelectDelegate"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<UrlReportViewModel>> GetUrlReportsAsync(string urlFilePath, MaxReferenceCountSelectDelegate maxReferenceSelectDelegate)
+        public async Task<IEnumerable<UrlReportViewModel>> GetUrlReportsAsync(
+            string urlFilePath, 
+            UrlRequestService urlRequestService,
+            UrlParseService urlParseService, 
+            MaxReferenceCountSelectDelegate maxReferenceSelectDelegate)
         {
             Func<Task<IEnumerable<string>>> getUrlsFunc = async () => await mUrlFileReadService.GetUrlsAsync(urlFilePath);
             IEnumerable<string> urls = await getUrlsFunc.WithTry(Enumerable.Empty<string>, (str)=>MessageBox.Show(str, "Ошибка чтения файла", MessageBoxButton.OK, MessageBoxImage.Error));
-            return urls.Select(x => new UrlReportViewModel(maxReferenceSelectDelegate) { Url = x });
+            return urls.Select(x => new UrlReportViewModel(urlRequestService, urlParseService, maxReferenceSelectDelegate) { Url = x });
         }
 
         #endregion//Открытые методы

@@ -47,10 +47,6 @@
     <Compile Include="Builders\UrlReportBuilder.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Converters\Abstract\ConverterBase.cs" />
-    <Compile Include="Converters\BoolToVisibleConverter.cs" />
-    <Compile Include="Converters\InvertNullOrEmptyToBoolConverter.cs" />
-    <Compile Include="Converters\NullOrEmptyToVisibleConverter.cs" />
     <Compile Include="Extensions\FuncExtensions.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -125,12 +125,13 @@ namespace FileProcessingTestApplication.ViewModels
                 {
                     if (mCancellationTokenSource.IsCancellationRequested) return;
                     ReferenceCount = result;
-                    mMaxReferenceCountSelectDelegateInvoker();
                 },
                 alertAction: exception =>
                 {
                     ErrorMessage = exception.Message;
                 }, scheduler: TaskScheduler.FromCurrentSynchronizationContext());
+            if (mCancellationTokenSource.IsCancellationRequested) return;
+            await mMaxReferenceCountSelectDelegateInvoker();
         }
 
         /// <summary>
